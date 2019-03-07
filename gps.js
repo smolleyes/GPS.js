@@ -33,7 +33,7 @@
     }
 
     if (data['type'] === 'GNS') {
-      state['usedSats'] = data['usedsats'];
+      state['satsUsed'] = data['satsUsed'];
     }
 
     if (data['type'] === 'RMC'/* || data['type'] === 'VTG'*/) {
