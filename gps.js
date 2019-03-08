@@ -38,7 +38,7 @@
 
     if (data['type'] === 'RMC'/* || data['type'] === 'VTG'*/) {
       // TODO: is rmc speed/track really interchangeable with vtg speed/track?
-      state['speed'] = data['speed'];
+      state['speed'] = Math.round(data['speed']);
       state['track'] = data['track'];
     }
 
