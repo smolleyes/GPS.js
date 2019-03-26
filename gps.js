@@ -29,11 +29,16 @@
 
     if (data['type'] === 'GGA') {
       state['alt'] = data['alt'];
+      state['gnssFix'] = data['quality'];
+    }
+
+    if (data['type'] === 'GNS') {
+      state['satsUsed'] = data['satsUsed'];
     }
 
     if (data['type'] === 'RMC'/* || data['type'] === 'VTG'*/) {
       // TODO: is rmc speed/track really interchangeable with vtg speed/track?
-      state['speed'] = data['speed'];
+      state['speed'] = Math.round(data['speed']);
       state['track'] = data['track'];
     }
 
