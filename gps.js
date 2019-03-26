@@ -1,5 +1,5 @@
 /**
- * @license GPS.js v0.5.1 26/01/2016
+ * @license GPS.js v0.5.2 26/01/2016
  *
  * Copyright (c) 2016, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -15,7 +15,7 @@
   var collectSats = [];
 
   function updateState(state, data) {
-    console.log(data)
+
     // TODO: can we really use RMC time here or is it the time of fix?
     if (data['type'] === 'RMC' || data['type'] === 'GGA' || data['type'] === 'GLL' || data['type'] === 'GNS') {
       state['time'] = data['time'];
@@ -29,16 +29,11 @@
 
     if (data['type'] === 'GGA') {
       state['alt'] = data['alt'];
-      state['gnssFix'] = data['quality'];
-    }
-
-    if (data['type'] === 'GNS') {
-      state['satsUsed'] = data['satsUsed'];
     }
 
     if (data['type'] === 'RMC'/* || data['type'] === 'VTG'*/) {
       // TODO: is rmc speed/track really interchangeable with vtg speed/track?
-      state['speed'] = Math.round(data['speed']);
+      state['speed'] = data['speed'];
       state['track'] = data['track'];
     }
 
@@ -497,7 +492,7 @@
     'GSV': function(str, gsv) {
 
       if (gsv.length % 4 % 3 === 0) {
-        console.log('Invalid GSV length: ' + str);
+        throw new Error('Invalid GSV length: ' + str);
       }
 
       /*
@@ -549,7 +544,7 @@
     // Geographic Position - Latitude/Longitude
     'GLL': function(str, gll) {
 
-      if (gll.length !== 9) {
+      if (gll.length !== 9 && gll.length !== 8) {
         throw new Error('Invalid GLL length: ' + str);
       }
 
@@ -575,7 +570,7 @@
         'status': parseRMC_GLLStatus(gll[6]),
         'lat': parseCoord(gll[1], gll[2]),
         'lon': parseCoord(gll[3], gll[4]),
-        'faa': parseFAA(gll[7])
+        'faa': gll.length === 9 ? parseFAA(gll[7]) : null
       };
     },
     // UTC Date / Time and Local Time Zone Offset
